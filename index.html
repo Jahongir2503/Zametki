@@ -4,27 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/vue.js"></script>
-    <script src="js/main.js"></script>
-    <title>Notes App</title>
+    <title>Mini Site</title>
 </head>
 <body>
 <div id="app">
-    <div class="column" id="column1">
-        <h2 class="column-title">To Do</h2>
-        <ul>
-        </ul>
+    <div class="columns">
+        <div class="column" id="todo">
+            <h2>To Do</h2>
+            <div v-if="firstColumn.length === 0">
+                There are no notes yet
+            </div>
+            <div v-for="(note, index) in firstColumn" :key="index">
+                <h4>{{note.event}}</h4>
+                <ul>
+                    <li>{{note.task}}</li>
+                </ul>
+            </div>
+        </div>
+        <div class="column" id="inProgress">
+            <h2>In Progress</h2>
+        </div>
+        <div class="column" id="done">
+            <h2>Done</h2>
+        </div>
     </div>
-    <div class="column" id="column2">
-        <h2 class="column-title">In Progress</h2>
-        <ul>
-        </ul>
-    </div>
-    <div class="column" id="column3">
-        <h2 class="column-title">Done</h2>
-        <ul>
-        </ul>
+
+    <div class="form-container">
+        <form>
+            <h3>Create a Note</h3>
+            <div class="form-group">
+                <label for="eventName">Event Name:</label>
+                <input type="text" v-model="note.eventName" id="eventName">
+            </div>
+            <div class="form-group">
+                <label for="taskName">Task Name:</label>
+                <input type="text" v-model="note.taskName" id="taskName">
+            </div>
+            <p>{{error}}</p>
+            <button @click="addNote" type="button">Create</button>
+        </form>
     </div>
 </div>
+
+<script src="js/vue.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
