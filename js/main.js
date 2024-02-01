@@ -26,6 +26,10 @@ new Vue({
                 event: this.note.eventName,
                 task: this.note.taskName
             })
+
+        },
+        deleteNote(index) {
+            this.firstColumn.splice(index, 1);
         }
 
     }

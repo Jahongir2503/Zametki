@@ -11,14 +11,15 @@
     <div class="columns">
         <div class="column" id="todo">
             <h2>To Do</h2>
-            <div v-if="firstColumn.length === 0">
-                There are no notes yet
-            </div>
-            <div v-for="(note, index) in firstColumn" :key="index">
+            <div v-for="(note, index) in firstColumn" :key="index" class="note-card" >
                 <h4>{{note.event}}</h4>
                 <ul>
                     <li>{{note.task}}</li>
                 </ul>
+                <button @click="deleteNote(index)" class="delete-button">Delete Note</button>
+            </div>
+            <div v-if="firstColumn.length === 0">
+                There are no notes yet
             </div>
         </div>
         <div class="column" id="inProgress">
