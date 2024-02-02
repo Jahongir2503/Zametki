@@ -11,10 +11,12 @@
     <div class="columns">
         <div class="column" id="todo">
             <h2>To Do</h2>
-            <div v-for="(note, index) in firstColumn" :key="index" class="note-card" >
+            <div v-for="(note, index) in firstColumn" :key="index" class="note-card">
                 <h4>{{note.event}}</h4>
                 <ul>
-                    <li>{{note.task}}</li>
+                    <li v-for="(task, taskIndex) in note.taskName" :key="taskIndex">
+                        <input type="checkbox" v-model="task.completed"> {{ task.text }}
+                    </li>
                 </ul>
                 <button @click="deleteNote(index)" class="delete-button">Delete Note</button>
             </div>
@@ -37,14 +39,20 @@
                 <label for="eventName">Event Name:</label>
                 <input type="text" v-model="note.eventName" id="eventName">
             </div>
-            <div class="form-group">
-                <label for="taskName">Task Name:</label>
-                <input type="text" v-model="note.taskName" id="taskName">
+            <div class="form-group" v-for="(task, taskIndex) in note.taskName" :key="taskIndex">
+                <label :for="'taskName' + taskIndex">Task {{ taskIndex + 1 }}:</label>
+                <input type="text" v-model="task.text" :id="'taskName' + taskIndex">
             </div>
             <p>{{error}}</p>
             <button @click="addNote" type="button">Create</button>
+            <button @click="addTaskRow" :disabled="note.taskName.length >= 5" type="button">Add Task Row</button>
+            <div v-if="note.taskName.length >= 5">
+                You can add only 5 tasks
+
+            </div>
         </form>
     </div>
+
 </div>
 
 <script src="js/vue.js"></script>

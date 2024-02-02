@@ -6,7 +6,12 @@ new Vue({
         thirdColumn: [],
         note: {
             eventName: '',
-            taskName: ''
+            taskName: [
+                {text: '', component: false},
+                {text: '', component: false},
+                {text: '', component: false}
+            ],
+
         },
         error: '',
 
@@ -16,7 +21,7 @@ new Vue({
             if (this.note.eventName === '') {
                 this.error = 'The name of the Note has not been entered';
                 return;
-            } else if (this.note.taskName === '') {
+            } else if (this.note.taskName.some(task => task === '')) {
                 this.error = 'Enter the task!';
                 return;
             }
@@ -24,13 +29,20 @@ new Vue({
 
             this.firstColumn.push({
                 event: this.note.eventName,
-                task: this.note.taskName
+                taskName: [...this.note.taskName]
             })
+            this.note.eventName = '';
+            this.note.taskName = ['', '', ''];
 
         },
+
         deleteNote(index) {
             this.firstColumn.splice(index, 1);
-        }
-
+        },
+        addTaskRow() {
+            if (this.note.taskName.length < 5) {
+                this.note.taskName.push({text: '', completed: false});
+            }
+        },
     }
 });
