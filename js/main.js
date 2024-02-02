@@ -7,21 +7,19 @@ new Vue({
         note: {
             eventName: '',
             taskName: [
-                {text: '', component: false},
-                {text: '', component: false},
-                {text: '', component: false}
+                {id: 1, text: '', completed: false},
+                {id: 2, text: '', completed: false},
+                {id: 3, text: '', completed: false}
             ],
-
         },
         error: '',
-
     },
     methods: {
         addNote() {
             if (this.note.eventName === '') {
                 this.error = 'The name of the Note has not been entered';
                 return;
-            } else if (this.note.taskName.some(task => task === '')) {
+            } else if (this.note.taskName.some(task => task.text === '')) {
                 this.error = 'Enter the task!';
                 return;
             }
@@ -29,51 +27,36 @@ new Vue({
 
             this.firstColumn.push({
                 event: this.note.eventName,
-                taskName: [...this.note.taskName]
-            })
+                taskName: this.note.taskName.map(task => ({...task})),
+                completedDate: null,
+            });
+
             this.note.eventName = '';
-
-
-        },
-
-        deleteNote(index) {
-            this.firstColumn.splice(index, 1);
+            this.note.taskName = [
+                {id: 1, text: '', completed: false},
+                {id: 2, text: '', completed: false},
+                {id: 3, text: '', completed: false}
+            ];
         },
         addTaskRow() {
             if (this.note.taskName.length < 5) {
-                this.note.taskName.push({text: '', completed: false});
+                this.note.taskName.push({id: this.note.taskName.length + 1, text: '', completed: false});
             }
         },
-        checkedTaskProsent(note) {
-            const comletedTasks = note.taskName.filter(task => task.completed).length;
-            return (comletedTasks / note.taskName.length) * 100;
-        },
-        movingNotes(index) {
-            const taskToMove = this.firstColumn[index].taskName[taskIndex];
-            if (taskToMove.component) {
+        updateNoteStatus(note, index) {
+            const completedTasks = note.taskName.filter(task => task.completed).length;
+            const completionPercentage = (completedTasks / note.taskName.length) * 100;
 
+            if (completionPercentage >= 50 && this.secondColumn.length < 5) {
+                this.secondColumn.push({...note, taskName: note.taskName.map(task => ({...task}))});
+                this.firstColumn.splice(this.firstColumn.indexOf(note), 1);
             }
-        },
-        saveInlocalStorage() {
-            const SaveNots = localStorage.getItem("Nots")
-            if (SaveNots) {
-                console.log(JSON.parse((SaveNots)));
-            }
-        },
 
+            if (completionPercentage === 100) {
+                note.completedDate = new Date().toLocaleString();
+                this.thirdColumn.push({...note, taskName: note.taskName.map(task => ({...task}))});
+                this.secondColumn.splice(index, 1);
+            }
+        },
     },
-    watch: {
-        firstColumn: {
-            handler: function (newNotes) {
-                newNotes.forEach((note, index) => {
-                    if (this.checkedTaskProsent(note) >= 50) {
-                        this.secondColumn.push(note);
-                        this.firstColumn.splice(index, 1);
-                    }
-                });
-            },
-            deep: true
-        }
-
-    }
 });

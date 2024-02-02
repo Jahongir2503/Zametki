@@ -15,10 +15,10 @@
                 <h4>{{note.event}}</h4>
                 <ul>
                     <li v-for="(task, taskIndex) in note.taskName" :key="taskIndex">
-                        <input type="checkbox" v-model="task.completed"> {{ task.text }}
+                        <input type="checkbox" v-model="task.completed" @change="updateNoteStatus(note)">
+                        {{ task.text }}
                     </li>
                 </ul>
-                <button @click="deleteNote(index)" class="delete-button">Delete Note</button>
             </div>
             <div v-if="firstColumn.length === 0">
                 There are no notes yet
@@ -30,13 +30,24 @@
                 <h4>{{note.event}}</h4>
                 <ul>
                     <li v-for="(task, taskIndex) in note.taskName" :key="taskIndex">
-                        <input type="checkbox" v-model="task.completed"> {{ task.text }}
+                        <input type="checkbox" v-model="task.completed" @change="updateNoteStatus(note, index)">
+                        {{ task.text }}
                     </li>
                 </ul>
             </div>
         </div>
         <div class="column" id="done">
             <h2>Done</h2>
+            <div v-for="(note, index) in thirdColumn" :key="index" class="note-card">
+                <h4>{{note.event}}</h4>
+                <ul>
+                    <li v-for="(task, taskIndex) in note.taskName" :key="taskIndex">
+                        <input type="checkbox" v-model="task.completed" disabled>
+                        {{ task.text }}
+                    </li>
+                </ul>
+                <p v-if="note.completedDate">Completed: {{ note.completedDate }}</p>
+            </div>
         </div>
     </div>
 
@@ -52,11 +63,10 @@
                 <input type="text" v-model="task.text" :id="'taskName' + taskIndex">
             </div>
             <p>{{error}}</p>
-            <button @click="addNote" :disabled="note === 5"  type="button">Create</button>
+            <button @click="addNote" :disabled="firstColumn.length >= 5" type="button">Create</button>
             <button @click="addTaskRow" :disabled="note.taskName.length >= 5" type="button">Add Task Row</button>
             <div v-if="note.taskName.length >= 5">
                 You can add only 5 tasks
-
             </div>
         </form>
     </div>
