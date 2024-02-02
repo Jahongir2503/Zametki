@@ -32,7 +32,7 @@ new Vue({
                 taskName: [...this.note.taskName]
             })
             this.note.eventName = '';
-            this.note.taskName = ['', '', ''];
+
 
         },
 
@@ -44,5 +44,36 @@ new Vue({
                 this.note.taskName.push({text: '', completed: false});
             }
         },
+        checkedTaskProsent(note) {
+            const comletedTasks = note.taskName.filter(task => task.completed).length;
+            return (comletedTasks / note.taskName.length) * 100;
+        },
+        movingNotes(index) {
+            const taskToMove = this.firstColumn[index].taskName[taskIndex];
+            if (taskToMove.component) {
+
+            }
+        },
+        saveInlocalStorage() {
+            const SaveNots = localStorage.getItem("Nots")
+            if (SaveNots) {
+                console.log(JSON.parse((SaveNots)));
+            }
+        },
+
+    },
+    watch: {
+        firstColumn: {
+            handler: function (newNotes) {
+                newNotes.forEach((note, index) => {
+                    if (this.checkedTaskProsent(note) >= 50) {
+                        this.secondColumn.push(note);
+                        this.firstColumn.splice(index, 1);
+                    }
+                });
+            },
+            deep: true
+        }
+
     }
 });

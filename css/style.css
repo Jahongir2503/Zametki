@@ -60,7 +60,7 @@ input {
     margin-top: 5px;
 }
 
-button {
+button  {
     background-color: #4caf50;
     color: #fff;
     padding: 10px 15px;
@@ -96,4 +96,9 @@ button:hover {
 
 .delete-button:hover {
     background-color: #e00000;
+}
+
+
+:disabled {
+    background-color: #505050;
 }
